@@ -122,8 +122,7 @@ class TopicController extends FrontendController
 
             ]);
 
-        }
-        else {
+        }else{
             return $this->render('view', [
                 'model' => $model,
                 'reply' => $reply,

@@ -132,12 +132,13 @@ class Topic extends \yii\db\ActiveRecord
                 Yii::$app->cache->delete('HotNode15');
                 $topicContent = new TopicContent();
                 if ($topicContent->load(Yii::$app->request->post())) {
-
-                    $search = new Search;
-                    $search->topic_id = $this->id;
-                    $search->title = $this->title;
-                    $search->content = $topicContent->content;
-                    $search->save();
+                    if (Yii::$app->params['setting']['xunsearch']) {//如果开启 xunsearch,windows无法使用 xunsearch
+                        $search = new Search;
+                        $search->topic_id = $this->id;
+                        $search->title = $this->title;
+                        $search->content = $topicContent->content;
+                        $search->save();
+                    }
 
                     $topicContent->topic_id = $this->id;
                     $topicContent->created = time();
@@ -157,10 +158,12 @@ class Topic extends \yii\db\ActiveRecord
                 $topicContent = new TopicContent();
                 if ($topicContent->load(Yii::$app->request->post())) {
 
-                    $search = Search::findOne($this->id);
-                    if(!empty($search)) {
-                        $search->content .= $topicContent->content;
-                        $search->save();
+                    if (Yii::$app->params['setting']['xunsearch']) {//如果开启 xunsearch,windows无法使用 xunsearch
+                        $search = Search::findOne($this->id);
+                        if(!empty($search)) {
+                            $search->content .= $topicContent->content;
+                            $search->save();
+                        }
                     }
 
                     $topicContent->topic_id = $this->id;
